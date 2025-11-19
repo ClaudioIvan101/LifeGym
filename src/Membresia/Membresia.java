@@ -1,18 +1,26 @@
+package Membresia;
+
 public class Membresia {
-    private int codigo;
+
+    private int id;
     private String nombre;
     private double precio;
-    public Membresia(int codigo, String nombre, double precio) {
-        this.codigo = codigo;
+
+    public Membresia(int id, String nombre, double precio, String tipo, int capacidadMax, boolean activa) {
+        this.id = id;
         this.nombre = nombre;
         this.precio = precio;
     }
-    public int getCodigo() {
-        return codigo;
+
+    public Membresia(int id, String nombre, double precio) {
     }
 
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNombre() {
