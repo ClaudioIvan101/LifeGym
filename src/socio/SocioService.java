@@ -1,7 +1,9 @@
 package socio;
 
-import java.util.ArrayList;
+import Membresia.Membresia;
 
+import java.util.ArrayList;
+import java.util.List;
 public class SocioService {
     private ArrayList<Socio> listaSocios;
 
@@ -27,4 +29,17 @@ public class SocioService {
     public ArrayList<Socio> obtenerTodos() {
         return listaSocios;
     }
+
+    public List<Socio> buscarPorMembresia(Membresia membresia) {
+        List<Socio> socios = new ArrayList<>();
+        for (Socio s : listaSocios) {
+            if (s.getMembresia().getId() == membresia.getId()) {
+                socios.add(s);
+            }
+        }
+        return socios;
+    }
+
+
+
 }

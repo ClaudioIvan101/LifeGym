@@ -1,21 +1,26 @@
 package Membresia;
 
+import socio.Socio;
+import socio.SocioService;
+
 import java.util.List;
 import java.util.Scanner;
 
 public class MenuMembresia {
+    private final SocioService socioService = new SocioService();
     Scanner sc = new Scanner(System.in);
     int opcion = 0;
     private final CrudMembresia crud = new CrudMembresia();
 
-    void mostrarMenuMembresia() {
+    public void mostrarMenuMembresia() {
         do {
             System.out.println("----- Menu Membresia -----");
             System.out.println("1. Agregar Membresia");
             System.out.println("2. Modificar Membresia");
             System.out.println("3. Eliminar Membresia");
             System.out.println("4. Mostrar Membresias");
-            System.out.println("5. Salir");
+            System.out.println("5. Listar socios de membresia");
+            System.out.println("6. Salir");
             System.out.print("Seleccione una opcion: ");
             try {
                 opcion = Integer.parseInt(sc.nextLine().trim());
@@ -34,15 +39,23 @@ public class MenuMembresia {
                     eliminarMembresia();
                     break;
                 case 4:
-                    mostrarMembresias();
+                    List<Membresia> lista = crud.listar();
+
+                    if (lista.isEmpty()) {
+                        System.out.println("No hay membresias registradas.");
+                    } else {
+                        mostrarMembresias(lista, 0);
+                    }
                     break;
                 case 5:
-                    System.out.println("Saliendo del menu de Membresia.");
+                    listarSociosDeMembresia();
                     break;
+                case 6:
+                    System.out.println("Saliendo del menu membresia.");
                 default:
                     System.out.println("Opcion invalida. Por favor intente de nuevo.");
             }
-        } while (opcion != 5);
+        } while (opcion != 6);
     }
 
     private void agregarMembresia() {
@@ -51,8 +64,6 @@ public class MenuMembresia {
             String nombre = sc.nextLine().trim();
             System.out.print("Precio: ");
             double precio = Double.parseDouble(sc.nextLine().trim());
-            System.out.print("Duracion (dias): ");
-
             Membresia m = crud.agregar(nombre, precio);
             System.out.println("Membresia agregada: " + m);
         } catch (NumberFormatException e) {
@@ -65,23 +76,38 @@ public class MenuMembresia {
             System.out.print("Ingrese ID de la membresia a modificar: ");
             int id = Integer.parseInt(sc.nextLine().trim());
             Membresia existente = crud.buscarPorId(id);
+
             if (existente == null) {
                 System.out.println("Membresia no encontrada.");
                 return;
             }
+
             System.out.println("Encontrado: " + existente);
+
             System.out.print("Nuevo nombre (enter para mantener): ");
             String nombre = sc.nextLine().trim();
-            if (nombre.isEmpty()) nombre = existente.getNombre();
+            if (nombre.isEmpty()) {
+                nombre = existente.getNombre();
+            }
 
             System.out.print("Nuevo precio (enter para mantener): ");
             String precioStr = sc.nextLine().trim();
-            double precio = precioStr.isEmpty() ? existente.getPrecio() : Double.parseDouble(precioStr);
+            double precio;
 
-            System.out.print("Nueva duracion dias (enter para mantener): ");
+            if (precioStr.isEmpty()) {
+                precio = existente.getPrecio();
+            } else {
+                precio = Double.parseDouble(precioStr);
+            }
 
             boolean ok = crud.modificar(id, nombre, precio);
-            System.out.println(ok ? "Membresia modificada." : "No se pudo modificar.");
+
+            if (ok) {
+                System.out.println("Membresia modificada.");
+            } else {
+                System.out.println("No se pudo modificar.");
+            }
+
         } catch (NumberFormatException e) {
             System.out.println("Datos invalidos. Operacion cancelada.");
         }
@@ -92,26 +118,71 @@ public class MenuMembresia {
             System.out.print("Ingrese ID de la membresia a eliminar: ");
             int id = Integer.parseInt(sc.nextLine().trim());
             boolean ok = crud.eliminar(id);
-            System.out.println(ok ? "Membresia eliminada." : "Membresia no encontrada.");
+
+            if (ok) {
+                System.out.println("Membresia eliminada.");
+            } else {
+                System.out.println("Membresia no encontrada.");
+            }
+
         } catch (NumberFormatException e) {
             System.out.println("ID invalido. Operacion cancelada.");
         }
     }
 
-    private void mostrarMembresias() {
-        List<Membresia> lista = crud.listar();
-        if (lista.isEmpty()) {
-            System.out.println("No hay membresias registradas.");
+    public void mostrarMembresias(List<Membresia> lista, int indice) {
+        if (indice >= lista.size()) {
             return;
         }
-        System.out.println("Lista de membresias:");
+
+        System.out.println(lista.get(indice));
+
+        mostrarMembresias(lista, indice + 1);
+    }
+
+    private void listarSociosDeMembresia() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("----- Membresías disponibles -----");
+        mostrarTodas();
+
+        System.out.print("Ingrese el ID de la membresía para ver sus socios: ");
+        int id = Integer.parseInt(sc.nextLine());
+
+        Membresia m = crud.buscarPorId(id);
+
+        if (m == null) {
+            System.out.println("No existe una membresía con ese ID.");
+            return;
+        }
+
+        List<Socio> socios = socioService.buscarPorMembresia(m);
+
+        if (socios.isEmpty()) {
+            System.out.println(
+                    "No hay socios registrados en la membresía '" + m.getNombre() + "'."
+            );
+            return;
+        }
+
+        System.out.println("Socios con la membresía '" + m.getNombre() + "':");
+        for (Socio s : socios) {
+            System.out.println(s);
+        }
+    }
+    private void mostrarTodas() {
+        List<Membresia> lista = crud.listar();
+
+        if (lista.isEmpty()) {
+            System.out.println("No hay membresías registradas.");
+            return;
+        }
+
         for (Membresia m : lista) {
-            System.out.println(m);
+            System.out.println("ID " + m.getId() + " - " + m.getNombre() + " ($" + m.getPrecio() + ")");
         }
     }
 
-    public static void main(String[] args) {
-        new MenuMembresia().mostrarMenuMembresia();
-    }
+
 }
 

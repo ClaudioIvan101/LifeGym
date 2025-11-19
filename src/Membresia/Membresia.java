@@ -6,13 +6,10 @@ public class Membresia {
     private String nombre;
     private double precio;
 
-    public Membresia(int id, String nombre, double precio, String tipo, int capacidadMax, boolean activa) {
+    public Membresia(int id, String nombre, double precio) {
         this.id = id;
         this.nombre = nombre;
         this.precio = precio;
-    }
-
-    public Membresia(int id, String nombre, double precio) {
     }
 
     public int getId() {
@@ -37,5 +34,14 @@ public class Membresia {
 
     public void setPrecio(double precio) {
         this.precio = precio;
+    }
+
+    @Override
+    public String toString() {
+        return "Membresia{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", precio=" + precio +
+                '}';
     }
 }

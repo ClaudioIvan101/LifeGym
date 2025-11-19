@@ -1,7 +1,11 @@
 package Membresia;
 
+import socio.Socio;
+import socio.SocioService;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class CrudMembresia {
     private final List<Membresia> lista = new ArrayList<>();
