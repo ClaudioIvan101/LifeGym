@@ -1,3 +1,5 @@
+package socio;
+
 public abstract class Persona {
     private int dni;
     private String nombre;
@@ -21,6 +23,8 @@ public abstract class Persona {
     }
 
     public String getRol() {
-        return "Persona";
+        return "socio.Persona";
     }
+
+    public abstract void mostrarInfo();
 }

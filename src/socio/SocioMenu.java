@@ -1,6 +1,7 @@
 package socio; // <--- IMPORTANTE
 
-import membresia.Membresia;
+import Membresia.Membresia;
+
 import java.util.Scanner;
 
 public class SocioMenu {
@@ -46,15 +47,9 @@ public class SocioMenu {
     private void agregar() {
         System.out.println("--- ALTA DE SOCIO ---");
         System.out.print("Nombre: "); String nombre = scanner.nextLine();
-        System.out.print("DNI: "); String dni = scanner.nextLine();
-        System.out.print("Email: "); String email = scanner.nextLine();
-        System.out.print("Nro Socio: "); int nro = Integer.parseInt(scanner.nextLine());
-
-        System.out.println("Plan: 1.Diario 2.Semanal 3.Mensual");
-        int p = Integer.parseInt(scanner.nextLine());
-        Membresia m = (p==2)? Membresia.SEMANAL : (p==3)? Membresia.MENSUAL : Membresia.DIARIO;
-
-        Socio nuevo = new Socio(nombre, dni, email, nro, m);
+        System.out.print("DNI: "); int dni = scanner.nextInt();
+        System.out.println("Edad: "); int edad = Integer.parseInt(scanner.nextLine());
+        Socio nuevo = new Socio(dni,nombre, edad);
         servicio.agregarSocio(nuevo);
         System.out.println(">> Guardado.");
     }
@@ -71,13 +66,6 @@ public class SocioMenu {
         System.out.print("Nro Socio a Modificar: ");
         int nro = Integer.parseInt(scanner.nextLine());
         Socio s = servicio.buscarSocio(nro);
-        if(s != null) {
-            System.out.println("Cambiar plan a: 1.Diario 2.Semanal 3.Mensual");
-            int p = Integer.parseInt(scanner.nextLine());
-            Membresia m = (p==2)? Membresia.SEMANAL : (p==3)? Membresia.MENSUAL : Membresia.DIARIO;
-            s.setMembresia(m);
-            System.out.println(">> Plan actualizado.");
-        } else System.out.println("No existe.");
     }
 
     private void eliminar() {

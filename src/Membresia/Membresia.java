@@ -1,3 +1,5 @@
+package Membresia;
+
 public class Membresia {
     private int codigo;
     private String nombre;
