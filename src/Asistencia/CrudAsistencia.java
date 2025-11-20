@@ -14,7 +14,6 @@ public class CrudAsistencia {
 
 
     public boolean registrarAsistencia() {
-
         int id = idGenerator++;
 
         //listarsocios()

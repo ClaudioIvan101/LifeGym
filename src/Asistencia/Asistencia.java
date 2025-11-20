@@ -10,7 +10,7 @@ public class Asistencia {
     private Membresia membresia;
     private LocalDateTime fechaHora;
 
-    public Asistencia(Socio socio, Membresia membresia, LocalDateTime fechaHora, int id) {
+    public Asistencia(int id,Socio socio, LocalDateTime fechaHora, Membresia membresia) {
         this.socio = socio;
         this.membresia = membresia;
         this.fechaHora = fechaHora;
