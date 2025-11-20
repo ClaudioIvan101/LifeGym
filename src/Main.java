@@ -27,14 +27,12 @@ public class Main {
                 case 3:
                     System.out.println("Menu asistencia");
                     break;
-
                 case 4:
                     System.out.println("Saliendo del sistema...");
                     break;
                 default:
                     System.out.println("Opción inválida, intente de nuevo.");
             }
-
             System.out.println();
         }while (opcion != 4);
         sc.close();

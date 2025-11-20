@@ -59,15 +59,37 @@ public class MenuMembresia {
     }
 
     private void agregarMembresia() {
+        String nombre;
+        double precio = 0;
+        boolean precioEsValido = false;
+
         try {
             System.out.print("Nombre: ");
-            String nombre = sc.nextLine().trim();
-            System.out.print("Precio: ");
-            double precio = Double.parseDouble(sc.nextLine().trim());
+            nombre = sc.nextLine().trim();
+            do {
+                System.out.print("Precio: ");
+                String precioStr = sc.nextLine().trim();
+
+                try {
+                    precio = Double.parseDouble(precioStr);
+                    precioEsValido = CrudMembresia.esPrecioValido(precio);
+
+                    if (!precioEsValido) {
+                        System.out.println("ERROR: El precio debe ser un valor positivo (mayor a cero).");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("RROR: Ingrese un número válido para el precio.");
+                    precioEsValido = false;
+                }
+
+            } while (!precioEsValido);
+
+
             Membresia m = crud.agregar(nombre, precio);
             System.out.println("Membresia agregada: " + m);
-        } catch (NumberFormatException e) {
-            System.out.println("Datos invalidos. Operacion cancelada.");
+
+        } catch (Exception e) {
+            System.out.println("Operación cancelada debido a: " + e.getMessage());
         }
     }
 
@@ -84,32 +106,49 @@ public class MenuMembresia {
 
             System.out.println("Encontrado: " + existente);
 
-            System.out.print("Nuevo nombre (enter para mantener): ");
+            System.out.print("Nuevo nombre (enter para mantener '" + existente.getNombre() + "'): ");
             String nombre = sc.nextLine().trim();
             if (nombre.isEmpty()) {
                 nombre = existente.getNombre();
             }
 
-            System.out.print("Nuevo precio (enter para mantener): ");
-            String precioStr = sc.nextLine().trim();
-            double precio;
+            double precio = existente.getPrecio();
+            boolean precioEsValido = false;
 
-            if (precioStr.isEmpty()) {
-                precio = existente.getPrecio();
-            } else {
-                precio = Double.parseDouble(precioStr);
-            }
+            do {
+                System.out.print("Nuevo precio (enter para mantener $" + existente.getPrecio() + "): ");
+                String precioStr = sc.nextLine().trim();
+
+                if (precioStr.isEmpty()) {
+                    precio = existente.getPrecio();
+                    precioEsValido = true;
+                } else {
+                    try {
+                        double nuevoPrecio = Double.parseDouble(precioStr);
+                        precioEsValido = CrudMembresia.esPrecioValido(nuevoPrecio);
+
+                        if (precioEsValido) {
+                            precio = nuevoPrecio;
+                        } else {
+                            System.out.println("ERROR: El precio debe ser un valor positivo (mayor a cero).");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("ERROR: Ingrese un número válido o presione Enter.");
+                        precioEsValido = false;
+                    }
+                }
+            } while (!precioEsValido);
 
             boolean ok = crud.modificar(id, nombre, precio);
 
             if (ok) {
                 System.out.println("Membresia modificada.");
             } else {
-                System.out.println("No se pudo modificar.");
+                System.out.println("No se pudo modificar. Verifique los datos o el ID.");
             }
 
         } catch (NumberFormatException e) {
-            System.out.println("Datos invalidos. Operacion cancelada.");
+            System.out.println("ID inválido. Operacion cancelada.");
         }
     }
 
@@ -177,12 +216,9 @@ public class MenuMembresia {
             System.out.println("No hay membresías registradas.");
             return;
         }
-
-        for (Membresia m : lista) {
-            System.out.println("ID " + m.getId() + " - " + m.getNombre() + " ($" + m.getPrecio() + ")");
-        }
+        lista.forEach(m ->
+                System.out.println("ID " + m.getId() + " - " + m.getNombre() + " ($" + m.getPrecio() + ")")
+        );
     }
-
-
 }
 

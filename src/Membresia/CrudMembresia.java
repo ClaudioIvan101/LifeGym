@@ -12,12 +12,18 @@ public class CrudMembresia {
     private int nextId = 1;
 
     public Membresia agregar(String nombre, double precio) {
+        if (!esPrecioValido(precio)) {
+            System.out.println("El precio debe ser mayor a cero.");
+        }
         Membresia m = new Membresia(nextId++, nombre, precio);
         lista.add(m);
         return m;
     }
 
     public boolean modificar(int id, String nuevoNombre, double nuevoPrecio) {
+        if (!esPrecioValido(nuevoPrecio)) {
+            return false;
+        }
         Membresia m = buscarPorId(id);
         if (m == null) return false;
         m.setNombre(nuevoNombre);
@@ -26,9 +32,16 @@ public class CrudMembresia {
     }
 
     public boolean eliminar(int id) {
-        Membresia m = buscarPorId(id);
-        if (m == null) return false;
-        return lista.remove(m);
+        boolean existe = lista.stream().anyMatch(m -> m.getId() == id);
+
+        if (!existe) {
+            System.out.println("No se encontró una membresía con el ID " + id);
+            return false;
+        }
+
+        lista.removeIf(m -> m.getId() == id);
+        System.out.println("Membresía con ID " + id + " eliminada correctamente.");
+        return true;
     }
 
     public List<Membresia> listar() {
@@ -40,5 +53,8 @@ public class CrudMembresia {
             if (m.getId() == id) return m;
         }
         return null;
+    }
+    public static boolean esPrecioValido(double precio) {
+        return precio > 0;
     }
 }
