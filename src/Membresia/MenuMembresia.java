@@ -11,7 +11,7 @@ public class MenuMembresia {
     private final SocioService socioService = new SocioService();
     Scanner sc = new Scanner(System.in);
     int opcion = 0;
-    private final CrudMembresia crud = new CrudMembresia();
+    private final CrudMembresia crudMembresia = new CrudMembresia();
 
     public void mostrarMenuMembresia() throws Exception {
         do {
@@ -40,7 +40,7 @@ public class MenuMembresia {
                     eliminarMembresia();
                     break;
                 case 4:
-                    List<Membresia> lista = crud.listar();
+                    List<Membresia> lista = crudMembresia.listar();
 
                     if (lista.isEmpty()) {
                         System.out.println("No hay membresias registradas.");
@@ -86,7 +86,7 @@ public class MenuMembresia {
             } while (!precioEsValido);
 
 
-            Membresia m = crud.agregar(nombre, precio);
+            Membresia m = crudMembresia.agregar(nombre, precio);
             System.out.println("Membresia agregada: " + m);
 
         } catch (Exception e) {
@@ -98,7 +98,7 @@ public class MenuMembresia {
         try {
             System.out.print("Ingrese ID de la membresia a modificar: ");
             int id = Integer.parseInt(sc.nextLine().trim());
-            Membresia existente = crud.buscarPorId(id);
+            Membresia existente = crudMembresia.buscarPorId(id);
 
             if (existente == null) {
                 System.out.println("Membresia no encontrada.");
@@ -140,7 +140,7 @@ public class MenuMembresia {
                 }
             } while (!precioEsValido);
 
-            boolean ok = crud.modificar(id, nombre, precio);
+            boolean ok = crudMembresia.modificar(id, nombre, precio);
 
             if (ok) {
                 System.out.println("Membresia modificada.");
@@ -151,19 +151,17 @@ public class MenuMembresia {
         } catch (NumberFormatException e) {
             System.out.println("ID inválido. Operacion cancelada.");
         } catch (MembresiaNoEncontradaException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
 
     private void eliminarMembresia() {
         try {
-            System.out.print("Ingrese ID de la membresia a eliminar: ");
+            System.out.print("Ingrese ID de la membresía a eliminar: ");
             int id = Integer.parseInt(sc.nextLine().trim());
 
-            // Ahora el método eliminar lanza excepción si no existe
-            crud.eliminar(id);
-
-            System.out.println("Membresia eliminada correctamente.");
+            crudMembresia.eliminar(id);
+            System.out.println("Membresía eliminada correctamente.");
 
         } catch (NumberFormatException e) {
             System.out.println("ID inválido. Operación cancelada.");
@@ -171,6 +169,9 @@ public class MenuMembresia {
             System.out.println(e.getMessage());
         }
     }
+
+
+
 
 
     public void mostrarMembresias(List<Membresia> lista, int indice) {
@@ -192,7 +193,7 @@ public class MenuMembresia {
         System.out.print("Ingrese el ID de la membresía para ver sus socios: ");
         int id = Integer.parseInt(sc.nextLine());
 
-        Membresia m = crud.buscarPorId(id);
+        Membresia m = crudMembresia.buscarPorId(id);
 
         if (m == null) {
             System.out.println("No existe una membresía con ese ID.");
@@ -214,7 +215,7 @@ public class MenuMembresia {
         }
     }
     private void mostrarTodas() {
-        List<Membresia> lista = crud.listar();
+        List<Membresia> lista = crudMembresia.listar();
 
         if (lista.isEmpty()) {
             System.out.println("No hay membresías registradas.");

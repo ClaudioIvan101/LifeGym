@@ -36,18 +36,12 @@ public class CrudMembresia {
         }
     }
 
-    public boolean eliminar(int id) throws MembresiaNoEncontradaException{
-        boolean existe = lista.stream().anyMatch(m -> m.getId() == id);
-
-        if (!existe) {
-            System.out.println("No se encontró una membresía con el ID " + id);
-            return false;
-        }
-
-        lista.removeIf(m -> m.getId() == id);
-        System.out.println("Membresía con ID " + id + " eliminada correctamente.");
-        return true;
+    public void eliminar(int id) throws MembresiaNoEncontradaException {
+        Membresia m = buscarPorId(id);
+        lista.remove(m);
     }
+
+
 
     public List<Membresia> listar() {
         return new ArrayList<>(lista);
