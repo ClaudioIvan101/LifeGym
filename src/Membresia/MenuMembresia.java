@@ -1,5 +1,6 @@
 package Membresia;
 
+import Excepciones.MembresiaNoEncontradaException;
 import socio.Socio;
 import socio.SocioService;
 
@@ -12,7 +13,7 @@ public class MenuMembresia {
     int opcion = 0;
     private final CrudMembresia crud = new CrudMembresia();
 
-    public void mostrarMenuMembresia() {
+    public void mostrarMenuMembresia() throws Exception {
         do {
             System.out.println("----- Menu Membresia -----");
             System.out.println("1. Agregar Membresia");
@@ -149,6 +150,8 @@ public class MenuMembresia {
 
         } catch (NumberFormatException e) {
             System.out.println("ID inválido. Operacion cancelada.");
+        } catch (MembresiaNoEncontradaException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -156,18 +159,19 @@ public class MenuMembresia {
         try {
             System.out.print("Ingrese ID de la membresia a eliminar: ");
             int id = Integer.parseInt(sc.nextLine().trim());
-            boolean ok = crud.eliminar(id);
 
-            if (ok) {
-                System.out.println("Membresia eliminada.");
-            } else {
-                System.out.println("Membresia no encontrada.");
-            }
+            // Ahora el método eliminar lanza excepción si no existe
+            crud.eliminar(id);
+
+            System.out.println("Membresia eliminada correctamente.");
 
         } catch (NumberFormatException e) {
-            System.out.println("ID invalido. Operacion cancelada.");
+            System.out.println("ID inválido. Operación cancelada.");
+        } catch (MembresiaNoEncontradaException e) {
+            System.out.println(e.getMessage());
         }
     }
+
 
     public void mostrarMembresias(List<Membresia> lista, int indice) {
         if (indice >= lista.size()) {
@@ -179,7 +183,7 @@ public class MenuMembresia {
         mostrarMembresias(lista, indice + 1);
     }
 
-    private void listarSociosDeMembresia() {
+    private void listarSociosDeMembresia() throws MembresiaNoEncontradaException {
         Scanner sc = new Scanner(System.in);
 
         System.out.println("----- Membresías disponibles -----");
