@@ -1,13 +1,21 @@
 package Asistencia;
-import java.util.ArrayList;
+import Membresia.Membresia;
+import socio.Socio;
+
 import java.time.LocalDateTime;
 
 public class Asistencia {
-
     private int id;
     private Socio socio;
-    private LocalDateTime fechaHora;
     private Membresia membresia;
+    private LocalDateTime fechaHora;
+
+    public Asistencia(Socio socio, Membresia membresia, LocalDateTime fechaHora, int id) {
+        this.socio = socio;
+        this.membresia = membresia;
+        this.fechaHora = fechaHora;
+        this.id = id;
+    }
 
     public Socio getSocio() {
         return socio;
@@ -15,22 +23,6 @@ public class Asistencia {
 
     public void setSocio(Socio socio) {
         this.socio = socio;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getFechaHora() {
-        return fechaHora;
-    }
-
-    public void setFechaHora(LocalDateTime fechaHora) {
-        this.fechaHora = fechaHora;
     }
 
     public Membresia getMembresia() {
@@ -41,22 +33,29 @@ public class Asistencia {
         this.membresia = membresia;
     }
 
-    public Asistencia(int id, Socio socio, LocalDateTime fechaHora, Membresia membresia) {
-        this.id = id;
-        this.socio = socio;
+    public LocalDateTime getFechaHora() {
+        return fechaHora;
+    }
+
+    public void setFechaHora(LocalDateTime fechaHora) {
         this.fechaHora = fechaHora;
-        this.membresia = membresia;
     }
 
-    @Override
-    public String toString() {
-        return "Asistencia{" +
-                "id=" + id +
-                ", socio=" + socio +
-                ", fechaHora=" + fechaHora +
-                ", membresia=" + membresia +
-                '}';
+    public int getId() {
+        return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+@Override
+public String toString() {
+    return "Asistencia{" +
+            "socio=" + socio +
+            ", membresia=" + membresia +
+            ", fechaHora=" + fechaHora +
+            ", id=" + id +
+            '}';
 }
-
+}
