@@ -1,73 +1,100 @@
 package Asistencia;
 
+import Membresia.Membresia;
+import socio.Socio;
+
 import java.lang.reflect.Array;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class CrudAsistencia {
 
     private static int idGenerator = 1;
 
-    private ArrayList<Asistencia> asistencias = new ArrayList<>();
-    private Scanner sc = new Scanner(System.in);
+    private final List<Asistencia> asistencias;
+    private final List<Socio> socios;
+    private final List<Membresia> membresias;
+    private final Scanner sc;
 
+    public CrudAsistencia(List<Socio> socios,
+                          List<Membresia> membresias,
+                          List<Asistencia> asistencias,
+                          Scanner sc) {
+
+        this.socios = socios;
+        this.membresias = membresias;
+        this.asistencias = asistencias;
+        this.sc = sc;
+    }
 
     public boolean registrarAsistencia() {
-        int id = idGenerator++;
 
-        //listarsocios()
+        int id = idGenerator++;
         Socio socioEncontrado = null;
 
         while (socioEncontrado == null) {
+
             System.out.print("Ingrese el DNI del socio: ");
-            int busquedaSocio = sc.nextInt();
-            sc.nextLine();
+
+            int dni = leerEntero();
 
             for (Socio s : socios) {
-                if (s.getDni() == busquedaSocio) {
+                if (s.getDni() == dni) {
                     socioEncontrado = s;
                     break;
                 }
             }
 
             if (socioEncontrado == null) {
-                System.out.println("Usuario no encontrado, intente nuevamente.\n");
+                System.out.println("Socio no encontrado. Intente nuevamente.\n");
             }
         }
 
         Membresia membresiaEncontrada = null;
 
-        //listarmembresias()
         while (membresiaEncontrada == null) {
-            System.out.print("Seleccione la membresía por ID: ");
-            int busquedaMembresia = sc.nextInt();
-            sc.nextLine();
+
+            System.out.println("Membresías disponibles:");
+            membresias.forEach(m ->
+                    System.out.println("ID " + m.getId() + " - " + m.getNombre())
+            );
+
+            System.out.print("Seleccione por ID: ");
+
+            int idM = leerEntero();
 
             for (Membresia m : membresias) {
-                if (m.getId() == busquedaMembresia) {
+                if (m.getId() == idM) {
                     membresiaEncontrada = m;
                     break;
                 }
             }
 
             if (membresiaEncontrada == null) {
-                System.out.println("Membresía no encontrada, intente nuevamente.\n");
+                System.out.println("Membresía no encontrada. Intente otra vez.\n");
             }
         }
 
-        LocalTime horaActual = LocalTime.now();
+        LocalDateTime fechaHora = LocalDateTime.now();
 
-        Asistencia asistencia = new Asistencia(id, socioencontrado, horaActual, membresiaencontrada);
+        Asistencia asistencia = new Asistencia(
+                id,
+                socioEncontrado,
+                fechaHora,
+                membresiaEncontrada
+        );
 
         asistencias.add(asistencia);
 
-        System.out.println("Asistencia registrada con ID: " + id);
-
+        System.out.println("Asistencia registrada! numero" + id);
         return true;
     }
 
     public void listarAsistencias() {
+
         if (asistencias.isEmpty()) {
             System.out.println("No hay asistencias registradas.");
             return;
@@ -75,6 +102,16 @@ public class CrudAsistencia {
 
         for (Asistencia a : asistencias) {
             System.out.println(a);
+        }
+    }
+
+    private int leerEntero() {
+        while (true) {
+            try {
+                return Integer.parseInt(sc.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.print("Número inválido. Intente otra vez: ");
+            }
         }
     }
 }

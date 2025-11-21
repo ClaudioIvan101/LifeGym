@@ -1,9 +1,11 @@
 import Asistencia.Asistencia;
+import Membresia.Membresia;
 import Membresia.MenuMembresia;
 import Reportes.MenuReporte;
 import Reportes.Reporte;
 import socio.Socio;
-
+import Asistencia.CrudAsistencia;
+import Asistencia.MenuAsistencia;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -14,8 +16,15 @@ public class Main {
         MenuMembresia menuMembresia = new MenuMembresia();
         List<Socio> socios = new ArrayList<>();
         List<Asistencia> asistencias = new ArrayList<>();
+        List<Membresia> membresias = new ArrayList<>();
         Reporte reporte = new Reporte(socios, asistencias);
         MenuReporte menuReportes = new MenuReporte(reporte);
+
+        CrudAsistencia crudAsistencia =
+                new CrudAsistencia(socios, membresias, asistencias, sc);
+
+        MenuAsistencia menuAsistencia =
+                new MenuAsistencia(crudAsistencia, sc);
         int opcion;
         do {
             System.out.println("===== SISTEMA DE GESTIÓN DE GIMNASIO =====");
@@ -36,7 +45,7 @@ public class Main {
                     menuMembresia.mostrarMenuMembresia();
                     break;
                 case 3:
-                    System.out.println("Menu asistencia");
+                    menuAsistencia.mostrarMenu();
                     break;
                 case 4:
                     menuReportes.mostrarMenuReportes();
