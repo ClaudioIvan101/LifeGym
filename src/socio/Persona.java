@@ -26,5 +26,17 @@ public abstract class Persona {
         return "socio.Persona";
     }
 
+    public void setDni(int dni) {
+        this.dni = dni;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setEdad(int edad) {
+        this.edad = edad;
+    }
+
     public abstract void mostrarInfo();
 }

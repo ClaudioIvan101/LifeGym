@@ -13,9 +13,15 @@ public class Socio extends Persona{
 
     @Override
     public void mostrarInfo() {
+        System.out.println("SOCIO DEL GIMNASIO");
+        System.out.println(
+                "Socio: DNI=" + this.getDni() +
+                        ", Nombre=" + this.getNombre() +
+                        ", Edad=" + this.getEdad() +
+                        (membresia != null ? ", Membresía=" + membresia.getNombre() : "")
+        );
     }
 
-    // Getters y Setters necesarios
     public void setMembresia(Membresia membresia) { this.membresia = membresia; }
     public Membresia getMembresia() { return membresia; }
 }
