@@ -1,20 +1,23 @@
 package Membresia;
 
 public class Membresia {
-    private int codigo;
+
+    private int id;
     private String nombre;
     private double precio;
-    public Membresia(int codigo, String nombre, double precio) {
-        this.codigo = codigo;
+
+    public Membresia(int id, String nombre, double precio) {
+        this.id = id;
         this.nombre = nombre;
         this.precio = precio;
     }
-    public int getCodigo() {
-        return codigo;
+
+    public int getId() {
+        return id;
     }
 
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNombre() {
@@ -31,5 +34,14 @@ public class Membresia {
 
     public void setPrecio(double precio) {
         this.precio = precio;
+    }
+
+    @Override
+    public String toString() {
+        return "Membresia{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", precio=" + precio +
+                '}';
     }
 }
