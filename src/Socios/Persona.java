@@ -1,4 +1,4 @@
-package socio;
+package Socios;
 
 public abstract class Persona {
     private int dni;

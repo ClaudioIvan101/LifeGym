@@ -1,17 +1,23 @@
-package Membresia;
+package Membresias;
 
 import Excepciones.MembresiaNoEncontradaException;
-import socio.Socio;
-import socio.SocioService;
+import Socios.Socio;
+import Socios.SocioService;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class MenuMembresia {
-    private final SocioService socioService = new SocioService();
-    Scanner sc = new Scanner(System.in);
+    private final CrudMembresia crudMembresia;
+    private final SocioService socioService;
+    private final Scanner sc;
+
+    public MenuMembresia(CrudMembresia crudMembresia, SocioService socioService, Scanner sc) {
+        this.crudMembresia = crudMembresia;
+        this.socioService = socioService;
+        this.sc = sc;
+    }
     int opcion = 0;
-    private final CrudMembresia crudMembresia = new CrudMembresia();
 
     public void mostrarMenuMembresia() throws Exception {
         do {
@@ -41,7 +47,6 @@ public class MenuMembresia {
                     break;
                 case 4:
                     List<Membresia> lista = crudMembresia.listar();
-
                     if (lista.isEmpty()) {
                         System.out.println("No hay membresias registradas.");
                     } else {
@@ -70,7 +75,6 @@ public class MenuMembresia {
             do {
                 System.out.print("Precio: ");
                 String precioStr = sc.nextLine().trim();
-
                 try {
                     precio = Double.parseDouble(precioStr);
                     precioEsValido = CrudMembresia.esPrecioValido(precio);
@@ -84,8 +88,6 @@ public class MenuMembresia {
                 }
 
             } while (!precioEsValido);
-
-
             Membresia m = crudMembresia.agregar(nombre, precio);
             System.out.println("Membresia agregada: " + m);
 
@@ -99,14 +101,11 @@ public class MenuMembresia {
             System.out.print("Ingrese ID de la membresia a modificar: ");
             int id = Integer.parseInt(sc.nextLine().trim());
             Membresia existente = crudMembresia.buscarPorId(id);
-
             if (existente == null) {
                 System.out.println("Membresia no encontrada.");
                 return;
             }
-
             System.out.println("Encontrado: " + existente);
-
             System.out.print("Nuevo nombre (enter para mantener '" + existente.getNombre() + "'): ");
             String nombre = sc.nextLine().trim();
             if (nombre.isEmpty()) {
@@ -214,7 +213,7 @@ public class MenuMembresia {
             System.out.println(s);
         }
     }
-    private void mostrarTodas() {
+    public void mostrarTodas() {
         List<Membresia> lista = crudMembresia.listar();
 
         if (lista.isEmpty()) {

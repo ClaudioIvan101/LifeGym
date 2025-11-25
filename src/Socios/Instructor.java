@@ -1,4 +1,4 @@
-package socio;
+package Socios;
 
 public class Instructor extends Persona {
     public Instructor(int dni, String nombre, int edad) {

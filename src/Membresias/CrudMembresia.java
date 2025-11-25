@@ -1,16 +1,24 @@
-package Membresia;
+package Membresias;
 
 import Excepciones.MembresiaNoEncontradaException;
-import socio.Socio;
-import socio.SocioService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class CrudMembresia {
     private final List<Membresia> lista = new ArrayList<>();
     private int nextId = 1;
+
+    public CrudMembresia(List<Membresia> listaInicial) {
+        if (listaInicial != null) {
+            this.lista.addAll(listaInicial);
+            for (Membresia m : listaInicial) {
+                if (m.getId() >= nextId) {
+                    nextId = m.getId() + 1;
+                }
+            }
+        }
+    }
 
     public Membresia agregar(String nombre, double precio) {
         if (!esPrecioValido(precio)) {

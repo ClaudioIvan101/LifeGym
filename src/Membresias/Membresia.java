@@ -1,4 +1,4 @@
-package Membresia;
+package Membresias;
 
 public class Membresia {
 
@@ -38,10 +38,6 @@ public class Membresia {
 
     @Override
     public String toString() {
-        return "Membresia{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", precio=" + precio +
-                '}';
+        return "[" + id + "] " + nombre + " - $" + precio;
     }
 }

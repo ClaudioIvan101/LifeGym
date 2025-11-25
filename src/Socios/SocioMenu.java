@@ -1,18 +1,28 @@
-package socio; // <--- IMPORTANTE
+package Socios; // <--- IMPORTANTE
 
-import Membresia.Membresia;
+import Excepciones.MembresiaNoEncontradaException;
+import Membresias.Membresia;
 
+import java.util.List;
 import java.util.Scanner;
 
+import Membresias.CrudMembresia;
 public class SocioMenu {
 
     private SocioService servicio;
+
+    private CrudMembresia crudMembresia;
     private Scanner scanner;
 
-    public SocioMenu() {
-        this.servicio = new SocioService();
-        this.scanner = new Scanner(System.in);
+    public SocioMenu(SocioService socioService,
+                     CrudMembresia crudMembresia,
+                     Scanner sc) {
+
+        this.servicio = socioService;
+        this.crudMembresia = crudMembresia;
+        this.scanner = sc;
     }
+
 
     public void mostrarMenu() {
         int opcion = -1;
@@ -30,7 +40,8 @@ public class SocioMenu {
             try {
                 opcion = Integer.parseInt(scanner.nextLine());
 
-                switch (opcion) {
+                switch (opcion)
+                {
                     case 1: agregar(); break;
                     case 2: buscar(); break;
                     case 3: modificar(); break;
@@ -43,12 +54,15 @@ public class SocioMenu {
 
             } catch (NumberFormatException e) {
                 System.out.println("Error: ingrese un número válido.");
+            } catch (MembresiaNoEncontradaException e) {
+                throw new RuntimeException(e);
             }
 
         } while (opcion != 0);
     }
 
-    private void agregar() {
+    private void agregar() throws MembresiaNoEncontradaException {
+        List<Membresia> lista = crudMembresia.listar();
         System.out.println("--- ALTA DE SOCIO ---");
 
         System.out.print("Nombre: ");
@@ -60,10 +74,31 @@ public class SocioMenu {
         System.out.print("Edad: ");
         int edad = Integer.parseInt(scanner.nextLine());
 
+        System.out.println("Seleccionar membresía:");
+        lista.forEach(m ->
+                System.out.println("ID " + m.getId() + " - " + m.getNombre() + " ($" + m.getPrecio() + ")")
+        );
+
+        System.out.print("ID membresia: ");
+        int idMembresia = Integer.parseInt(scanner.nextLine());
+
+        Membresia membresiaSeleccionada = crudMembresia.buscarPorId(idMembresia);
+
+        if (membresiaSeleccionada == null) {
+            throw new MembresiaNoEncontradaException(idMembresia);
+        }
+
+
         Socio nuevo = new Socio(dni, nombre, edad);
+        nuevo.setMembresia(membresiaSeleccionada);
+
+
         servicio.agregarSocio(nuevo);
 
-        System.out.println(">> Socio guardado.");
+
+        servicio.generarPrimeraCuota(nuevo);
+
+        System.out.println(">> Socio guardado con cuota inicial paga.");
     }
 
 

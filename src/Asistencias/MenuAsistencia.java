@@ -1,4 +1,4 @@
-package Asistencia;
+package Asistencias;
 import java.util.Scanner;
 
 public class MenuAsistencia {

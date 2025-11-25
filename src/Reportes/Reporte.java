@@ -1,10 +1,10 @@
 package Reportes;
 
-import Asistencia.Asistencia;
-import socio.Socio;
+import Asistencias.Asistencia;
+import Cuotas.Cuota;
+import Socios.Socio;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -14,21 +14,18 @@ public class Reporte {
         private List<Socio> socios;
         private List<Asistencia> asistencias;
 
-        public Reporte(List<Socio> socios, List<Asistencia> asistencias) {
-            this.socios = socios;
-            this.asistencias = asistencias;
-        }
+    public Reporte(List<Socio> socios, List<Asistencia> asistencias) {
+        this.socios = socios;
+        this.asistencias = asistencias;
+
+    }
     public double montoTotalFacturado() {
         return socios.stream()
-                .mapToDouble(s -> s.getMembresia().getPrecio())
+                .flatMap(s -> s.getCuotas().stream())
+                .filter(Cuota::isPagado)
+                .mapToDouble(Cuota::getMonto)
                 .sum();
     }
-
-        public List<Socio> ordenarSociosPorMembresia() {
-        return socios.stream()
-                .sorted(Comparator.comparing(s -> s.getMembresia().getNombre()))
-                .toList();
-       }
 
 
     public List<Asistencia> asistenciasHoy() {
@@ -43,7 +40,40 @@ public class Reporte {
                     .collect(Collectors.groupingBy(Asistencia::getSocio, Collectors.counting()));
         }
 
-        public void mostrarSocios() {
-            socios.forEach(s -> System.out.println(s.getNombre()));
+
+    public List<Socio> sociosConCuotaVencida() {
+        LocalDate hoy = LocalDate.now();
+
+        return socios.stream()
+                .filter(s -> {
+                    Cuota ultima = s.getUltimaCuotaPagada();
+                    return ultima == null || ultima.getFechaVencimiento().isBefore(hoy);
+                })
+                .toList();
+    }
+
+
+    public List<Socio> sociosConCuotaAlDia() {
+        LocalDate hoy = LocalDate.now();
+
+        return socios.stream()
+                .filter(s -> {
+                    Cuota ultima = s.getUltimaCuotaPagada();
+                    return ultima != null && !ultima.getFechaVencimiento().isBefore(hoy);
+                })
+                .toList();
+    }
+    public LocalDate vencimientoDeSocio(int dni) {
+        for (Socio s : socios) {
+            if (s.getDni() == dni) {
+                Cuota ultima = s.getUltimaCuotaPagada();
+                if (ultima != null) {
+                    return ultima.getFechaVencimiento();
+                } else {
+                    return null;
+                }
+            }
         }
+        return null;
+    }
 }

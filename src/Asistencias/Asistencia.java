@@ -1,6 +1,6 @@
-package Asistencia;
-import Membresia.Membresia;
-import socio.Socio;
+package Asistencias;
+import Membresias.Membresia;
+import Socios.Socio;
 
 import java.time.LocalDateTime;
 
@@ -49,13 +49,13 @@ public class Asistencia {
         this.id = id;
     }
 
-@Override
-public String toString() {
-    return "Asistencia{" +
-            "socio=" + socio +
-            ", membresia=" + membresia +
-            ", fechaHora=" + fechaHora +
-            ", id=" + id +
-            '}';
-}
+    @Override
+    public String toString() {
+        return "Asistencia #" + id +
+                " | Socio: " + socio.getNombre() +
+                " | DNI: " + socio.getDni() +
+                " | Membresía: " + membresia.getNombre() +
+                " | Fecha/Hora: " + fechaHora;
+    }
+
 }
