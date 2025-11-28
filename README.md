@@ -27,4 +27,4 @@ y realizar varias consultas.
   Desarrollo del paquete **Asistencias**, incluyendo las clases *Asistencias*, *CrudAsistencia* y *MenuAsistencia*.
 
 La clase Main, junto con los reportes fue implementada e ideada de forma colaborativa por todos los integrantes, 
-al igual que las Excepciones Personalizadas.
+al igual que las Excepciones Personalizadas
